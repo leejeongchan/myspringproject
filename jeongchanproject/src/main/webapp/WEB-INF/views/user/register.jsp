@@ -147,7 +147,7 @@ function execPostCode() {
 					$("#divInputId").addClass("has-success")
 					$("#divInputId").removeClass("has-error")
 					
-					$("#signUpUserPwd").focus();
+					$("#userName").focus();
 					isCheckId = 1;
 				} else {
 					alert("아이디가 존재합니다. 다른 아이디를 입력해주세요.");
@@ -155,7 +155,7 @@ function execPostCode() {
 					$("#divInputId").addClass("has-error")
 					$("#divInputId").removeClass("has-success")
 					
-					$("#signUpUserId").focus();
+					$("#userId").focus();
 				}
 			},
 			error: function(req, status, errThrown) {
