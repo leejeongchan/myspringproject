@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeongchan.mapper.BoardMapper">
+
+<!-- 전체 글 조회 -->
+<select id="getList" resultType="com.jeongchan.domain.BoardVO">
+	<![CDATA[
+		select * from jeongchan_board where bno>0
+	]]>
+</select>
+
+<!-- 게시글 테이블에 삽입 -->
+<insert id="insert">
+	insert into jeongchan_board (bno,title,content,writer)
+	values (seq_board.nextval, #{title},#{content},#{writer})
+</insert>
+
+<!-- 게시글 테이블에 삽입 하돼 게시글 번호를 알 수 있다. -->
+<insert id="insertSelectKey">
+	<selectKey keyProperty="bno" order="BEFORE" resultType="long">
+		select seq_board2.nextval from dual
+	</selectKey>
+	
+	insert into jeongchan_board (bno,title,content,writer)
+	values (#{bno},#{title},#{content},#{writer})
+</insert>
+
+<!-- 게시글 번호로 해당 글 조회 -->
+<select id="read" resultType="com.jeongchan.domain.BoardVO">
+	select * from jeongchan_board where bno=#{bno}
+</select>
+
+<!-- 게시글 번호로 그 게시글 삭제 -->
+<delete id="delete">
+	delete jeongchan_board where bno=#{bno}
+</delete>
+
+<!-- 게시글 수정 -->
+<update id="update">
+	update jeongchan_board
+	set title=#{title},
+	content=#{content},
+	writer=#{writer},
+	updateDate=sysdate
+	where bno=#{bno}
+</update>
+
+<sql id="criteria">
+		<!-- prefixOverrides는 맨 앞이 OR로 시작 될경우 제거해주고 시작한다. 밑에서 중간에 OR을 넣어주기 위함 즉 OR title like ~~ OR content like 으로 시작됨 -->
+		<!-- collection이 typeArr인 이유는 마이바티스는 빈이아닌 get/set 메서드 이름을 보고 판단하기 때문에 Criteria에서 getTypeArr를 보고 typeArr로 판단한다. -->
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection='typeArr'>
+				<trim prefix="OR">
+					<choose>
+						<when test="type=='T'.toString()">
+							title like '%'||#{keyword}||'%'
+						</when>
+						<when test="type=='C'.toString()">
+							content like '%'||#{keyword}||'%'
+						</when>
+						<when test="type=='W'.toString()">
+							writer like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+
+</sql>
+<!-- 페이징 처리 -->
+<!-- pageNum*amount는 끝번호 pageNum-1 *amount는 시작번호 -->
+<select id="getListWithPaging" resultType="com.jeongchan.domain.BoardVO">
+	<![CDATA[
+		select bno,title,content,writer,regdate,updatedate,viewcnt,replycnt,filecnt
+		from
+		(
+			select /*+INDEX_DESC(jeongchan_board pk_jc_board)*/
+				rownum rn,bno,title,content,writer,regdate,updatedate,viewcnt,replycnt,filecnt
+			from
+				jeongchan_board
+			where 
+			
+	]]>	
+	<!-- prefixOverrides는 OR로 시작 될경우 제거해주고 시작한다. 밑에서 중간에 OR을 넣어주기 위함 -->
+	<!-- collection이 typeArr인 이유는 마이바티스는 빈이아닌 get/set 메서드 이름을 보고 판단하기 때문에 Criteria에서 getTypeArr를 보고 typeArr로 판단한다. -->
+	<include refid="criteria"></include>
+	
+	<![CDATA[
+			rownum<=#{pageNum} * #{amount} 
+		)
+		where rn>(#{pageNum}-1)*#{amount}
+		
+	]]>
+</select>
+<!--  -->
+<select id="getTotalCount" resultType="int">
+	select count(*) from jeongchan_board 
+	where
+	<include refid="criteria"></include> 
+	bno>0
+</select>
+
+<update id="updateViewcnt">
+	update jeongchan_board
+	set viewcnt = viewcnt+1
+	where bno = #{bno}
+</update>
+
+<update id="updateReplyCnt">
+	update jeongchan_board set replyCnt = replyCnt +#{amount} where bno = #{bno}
+</update>
+
+ <update id="updatefileCnt">
+	update jeongchan_board set filecnt = filecnt +#{fileamount} where bno = #{bno}
+</update>
+</mapper>

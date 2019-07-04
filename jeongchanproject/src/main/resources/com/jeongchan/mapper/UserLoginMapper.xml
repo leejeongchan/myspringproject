@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeongchan.mapper.UserLoginMapper">
+	<select id="login" resultMap="userVOResultMap">
+		select * from jeongchan_user where user_id = #{userId}
+	</select>
+	
+	<update id="keepLogin">
+		update jeongchan_user
+		set session_key = #{sessionId}, session_limit =#{sessionLimit}
+		where user_id = #{userId}
+	</update>
+	
+	<select id="checkUserWithSessionKey" resultMap="userVOResultMap">
+		select * from jeongchan_user where session_key = #{value}
+	</select>
+	
+	<select id="loginById" resultMap="userVOResultMap">
+		select * from jeongchan_user where user_id = #{userId}
+	</select>
+	
+	<resultMap type="com.jeongchan.domain.UserVO" id="userVOResultMap">
+		<id property="userId" column="user_id"/>
+		<result property="userPw" column="user_pw"/>
+		<result property="userName" column="user_name"/>
+		<result property="userEmail" column="user_email"/>
+		<result property="addr1" column="addr1"/>
+		<result property="addr2" column="addr2"/>
+		<result property="addr3" column="addr3"/>
+		<result property="userSkill1" column="user_skill1"/>
+		<result property="userSkill2" column="user_skill2"/>
+		<result property="userJoinDate" column="user_join_date"/>
+		<result property="userLoginDate" column="user_login_date"/>
+		<result property="userSignature" column="user_signature"/>
+		<result property="userLike" column="user_like"/>
+		<result property="userAdmin" column="user_admin"/>
+		<result property="userKey" column="user_key"/>
+	</resultMap>
+</mapper>

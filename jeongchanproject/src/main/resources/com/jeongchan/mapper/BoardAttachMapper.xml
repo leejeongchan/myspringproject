@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeongchan.mapper.BoardAttachMapper">
+	<insert id='insert'>
+		insert into jeongchan_attach
+		(uuid,uploadPath,fileName,fileType,bno)
+		values
+		(#{uuid},#{uploadPath},#{fileName},#{fileType},#{bno})
+
+	</insert>
+
+	<delete id='delete'>
+		delete from jeongchan_attach where uuid = #{uuid}
+
+	</delete>
+
+	<select id="findByBno"
+		resultType="com.jeongchan.domain.BoardAttachVO">
+		select * from jeongchan_attach where bno=#{bno}
+	</select>
+	
+	<delete id="deleteAll">
+		delete jeongchan_attach where bno = #{bno}
+	</delete>
+	
+	<select id="getOldFiles" resultType="com.jeongchan.domain.BoardAttachVO">
+		select * from jeongchan_attach where uploadpath = to_char(sysdate -1,'yyyy\mm\dd')
+	</select>
+	
+	<select id="getCount" resultType="int">
+		select count(*) from jeongchan_attach where bno = #{bno}
+	</select>
+
+</mapper>
