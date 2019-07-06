@@ -26,6 +26,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter{
 		
 		if(userVO!=null) {
 			log.info("new login Success");
+			//로그인 정보 담기
 			httpSession.setAttribute(LOGIN, userVO);
 			
 			//쿠키 생성

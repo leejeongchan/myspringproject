@@ -55,6 +55,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <input type="hidden" name="userLoginDate" value="<fmt:formatDate value="${login.userJoinDate}" pattern="yyyy/MM/dd"/>">
               <input type="hidden" name="userLike" value="${login.userLike}">
               <input type="hidden" name="userAdmin" value="${login.userAdmin}">
+              <input type="hidden" name="userKey" value="${login.userKey }">
               <div class="box-body">
                 <div class="form-group">
                   <label for="Signature">자기소개글</label>

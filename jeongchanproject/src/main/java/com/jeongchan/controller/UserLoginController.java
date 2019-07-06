@@ -57,14 +57,14 @@ public class UserLoginController {
 			//loginPost.jsp로 이동
 			return ;
 		}
-		
+		//이메일 인증이 안된 유저일 경우 메일 재전송
 		if(!userVO.getUserKey().equals("Y")) {
 			mailsender.mailSendWithUserKey(userVO.getUserEmail(),userVO.getUserId(),request);
 			model.addAttribute("message","email");
 			return ;
 
 		}
-		//로그인 유지를 선택할 경우
+		//로그인 유지를 선택할 경우(로그인 기억)
 		if(loginDTO.isUseCookie()) {
 			int amount = 60*60*24*7; //7days
 			Date sessionLimit = new Date(System.currentTimeMillis()+(1000*amount));
