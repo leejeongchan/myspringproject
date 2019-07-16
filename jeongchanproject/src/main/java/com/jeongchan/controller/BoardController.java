@@ -22,7 +22,9 @@ import com.jeongchan.domain.BoardAttachVO;
 
 import com.jeongchan.domain.BoardVO;
 import com.jeongchan.domain.Criteria;
+import com.jeongchan.domain.Criteria2;
 import com.jeongchan.domain.PageDTO;
+import com.jeongchan.domain.PageDTO2;
 import com.jeongchan.service.BoardService;
 
 import lombok.Setter;
@@ -46,7 +48,17 @@ public class BoardController {
 		System.out.println("total count: " + total);
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
 	}
-
+	//자기가 쓴글 리스트
+	@GetMapping("/mylist")
+	public void mylist(Criteria2 cri,String writer,Model model) {
+		log.info("list :" + cri);
+		log.info("writer: "+writer);
+		model.addAttribute("mylist",service.getMyList(cri,writer));
+		log.info("1");
+		int mytotal = service.getMyTotal(writer);
+		model.addAttribute("pageMaker", new PageDTO2(cri,mytotal));
+		
+	}
 	// 게시글 등록 페이지 이동
 	@GetMapping("/register")
 	public void register() {

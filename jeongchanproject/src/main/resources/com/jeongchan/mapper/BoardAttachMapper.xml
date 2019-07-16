@@ -22,7 +22,7 @@
 	</select>
 	
 	<delete id="deleteAll">
-		delete jeongchan_attach where bno = #{bno}
+		delete from jeongchan_attach where bno = #{bno}
 	</delete>
 	
 	<select id="getOldFiles" resultType="com.jeongchan.domain.BoardAttachVO">

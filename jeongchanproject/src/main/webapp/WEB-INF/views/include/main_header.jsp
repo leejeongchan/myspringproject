@@ -59,7 +59,7 @@
                   	</div>
                   </c:if>
                   <div class="col-xs-4 text-center">
-                    <a href="#">북마크</a>
+                    <a href="/board/mylist?writer=${login.userId}">내가쓴글</a>
                   </div>
                 </div>
                 <!-- /.row -->

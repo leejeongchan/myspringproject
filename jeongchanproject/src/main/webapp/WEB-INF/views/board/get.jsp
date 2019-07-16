@@ -207,7 +207,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			});
 			
 		}
-		var bnoValue = '<c:out value="${board.bno}"/>';
+		var bnoValue = '<c:out value="${board.bno}"/>'; //게시글 번호 
 
 		//for Reply add test
 		/*replyService.add({reply:"JS Test",replyer:"tester",bno:bnoValue},
@@ -333,6 +333,7 @@ $(document).ready(function(){
 													bno : bnoValue,
 													page : page || 1
 												},
+												//콜벡 메소드... reply.js에서 모듈화한 함수의 callback
 												function(replyCnt, list) {
 													//만약 새 댓글 추가시 showList(-1)로 호출이 되면 아래 실행 마지막 페이지로 이동...
 													if (page == -1) {
@@ -475,7 +476,7 @@ $(document).ready(function(){
 								};
 
 								replyService.update(reply, function(result) {
-									alert(result);
+									alert(result);//success
 									modal.modal("hide");
 									showList(pageNum);
 								});
@@ -487,7 +488,7 @@ $(document).ready(function(){
 								var rno = modal.data("rno");
 
 								replyService.remove(rno, function(result) {
-									alert(result);
+									alert(result);//success
 									modal.modal("hide");
 									showList(pageNum);
 								});

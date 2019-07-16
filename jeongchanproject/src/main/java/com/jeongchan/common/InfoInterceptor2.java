@@ -32,7 +32,7 @@ public class InfoInterceptor2 extends HandlerInterceptorAdapter {
 		HttpSession httpSession = request.getSession();
 
 		ModelMap modelMap = modelAndView.getModelMap();
-		Object userVO = modelMap.get("user");
+		Object userVO = modelMap.get("user"); //가져옴 
 
 		if (userVO != null) {
 			log.info("new login Success");

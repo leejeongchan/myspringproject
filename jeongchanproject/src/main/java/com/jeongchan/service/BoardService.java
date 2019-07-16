@@ -2,10 +2,12 @@ package com.jeongchan.service;
 
 import java.util.List;
 
+
 import com.jeongchan.domain.BoardAttachVO;
 
 import com.jeongchan.domain.BoardVO;
 import com.jeongchan.domain.Criteria;
+import com.jeongchan.domain.Criteria2;
 
 public interface BoardService {
 	//게시글 등록 서비스
@@ -25,8 +27,12 @@ public interface BoardService {
 	//public List<BoardVO> getList();
 	public List<BoardVO> getList(Criteria cri);
 	
+	//내 게시글 페이징 조회
+	public List<BoardVO> getMyList(Criteria2 cri,String writer);
+	
 	public int getTotal(Criteria cri);
 	
+	public int getMyTotal(String writer);
 	
 	public List<BoardAttachVO> getAttachList(Long bno);
 	

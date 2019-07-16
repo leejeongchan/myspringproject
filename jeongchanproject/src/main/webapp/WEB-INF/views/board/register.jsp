@@ -176,7 +176,7 @@ $(document).ready(
 				
 				$(uploadResultArr).each(function(i,obj){
 					console.log("type: "+obj.fileType);
-					if(!obj.fileType){
+					if(!obj.fileType){ //일반파일 
 						var fileCallPath = encodeURIComponent(obj.uploadPath+"/"+obj.uuid+"_"+obj.fileName);
 						var fileLink = fileCallPath.replace(new RegExp(/\\/g),"/");
 						console.log("일반파일");
@@ -190,7 +190,7 @@ $(document).ready(
 						str += "</div>";
 						str += "</li>";
 
-					}else{
+					}else{ //이미지파일
 						//str +="<li>" + obj.fileName + "</li>";
 						//썸네일 처리(Get방식)
 						console.log("이미지파일");

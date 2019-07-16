@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jeongchan.domain.BoardAttachVO;
 import com.jeongchan.domain.BoardVO;
 import com.jeongchan.domain.Criteria;
+import com.jeongchan.domain.Criteria2;
 import com.jeongchan.mapper.BoardAttachMapper;
 import com.jeongchan.mapper.BoardMapper;
 
@@ -129,6 +130,18 @@ public class BoardServiceImpl implements BoardService {
 		log.info("get Attach List by bno: "+bno);
 		
 		return attachMapper.findByBno(bno);
+	}
+	@Override
+	public List<BoardVO> getMyList(Criteria2 cri, String writer) {
+		// TODO Auto-generated method stub
+		log.info("getMyList service : "+cri);
+		log.info("getMyList Service : "+writer);
+		return mapper.getMyList(cri, writer);
+	}
+	@Override
+	public int getMyTotal(String writer) {
+		// TODO Auto-generated method stub
+		return mapper.getMyTotalCount(writer);
 	}
 
 }

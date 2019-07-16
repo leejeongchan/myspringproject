@@ -113,148 +113,137 @@ public class UploadController {
 		return result;
 	}
 
-	//브라우저에도 추가적으로 업로드하고나서 json 형태로 결과를 넘겨줘야함 AttachFileDTO를 이용하여 객체시켜서 json형태로 넘겨줌
-		@PostMapping(value="/uploadAjax",produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
-		@ResponseBody
-		public ResponseEntity<List<BoardAttachVO>> uploadAjaxPost(MultipartFile[] uploadFile)
-		{
-			List<BoardAttachVO> list = new ArrayList<>();
-			
-			
-			log.info("update Ajax post....");
-			String uploadFolder = "C:\\upload";
-			String uploadFolderPath = getFolder();
-			//make folder
-			File uploadPath = new File(uploadFolder,uploadFolderPath);
-			
-			if(uploadPath.exists() == false) {
-				uploadPath.mkdirs();
-			}
-			//make yyyy/mm/dd 폴더 생성
-			
-			for(MultipartFile multipartFile : uploadFile) {
-				
-				BoardAttachVO attachDTO = new BoardAttachVO();
-				
-				
-				String uploadFileName = multipartFile.getOriginalFilename();
-				//파일이름 DTO에 넣어주기
-				attachDTO.setFileName(uploadFileName);
-				attachDTO.setUploadPath(uploadFolderPath);
-				
-				
-				
-				UUID uuid = UUID.randomUUID();
-				
-				
-				//iE has file path
-				//uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
-				
-				uploadFileName = uuid.toString() + "_" + uploadFileName;
-				
-				
-				log.info("only file name(for IE): "+uploadFileName);
-		
-				
-				
-				try {
-					//File saveFile = new File(uploadFolder,uploadFileName);
-					File saveFile = new File(uploadPath,uploadFileName);
-					multipartFile.transferTo(saveFile);
-					
-					attachDTO.setUuid(uuid.toString());
-					
-					if(checkImageType(saveFile)) {
-						attachDTO.setFileType(true);
-						FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath,"s_"+uploadFileName));
-						
-						Thumbnailator.createThumbnail(multipartFile.getInputStream(),thumbnail,100,100);
-						thumbnail.close();
-						
-						
-					}
-					list.add(attachDTO);
-					
-				}catch(Exception e) {
-					log.error(e.getMessage());
-					e.printStackTrace();
-				}
-			}
-			return new ResponseEntity<>(list,HttpStatus.OK);
-		}
-		
-	
-	//다운로드
-	@GetMapping(value="/download",produces=MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	// 브라우저에도 추가적으로 업로드하고나서 json 형태로 결과를 넘겨줘야함 AttachFileDTO를 이용하여 객체시켜서 json형태로 넘겨줌
+	@PostMapping(value = "/uploadAjax", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public ResponseEntity<Resource> downloadFile(@RequestHeader("User-Agent")String userAgent,String fileName){
-		log.info("download File: "+fileName);
-		Resource resource = new FileSystemResource("c:\\upload\\"+fileName);
-		
-		if(resource.exists()==false) {
+	public ResponseEntity<List<BoardAttachVO>> uploadAjaxPost(MultipartFile[] uploadFile) {
+		List<BoardAttachVO> list = new ArrayList<>();
+
+		log.info("update Ajax post....");
+		String uploadFolder = "C:\\upload";
+		String uploadFolderPath = getFolder();
+		// make folder
+		File uploadPath = new File(uploadFolder, uploadFolderPath);
+
+		if (uploadPath.exists() == false) {
+			uploadPath.mkdirs();
+		}
+		// make yyyy/mm/dd 폴더 생성
+
+		for (MultipartFile multipartFile : uploadFile) {
+
+			BoardAttachVO attachDTO = new BoardAttachVO();
+
+			String uploadFileName = multipartFile.getOriginalFilename();
+			// 파일이름 DTO에 넣어주기
+			attachDTO.setFileName(uploadFileName);
+			attachDTO.setUploadPath(uploadFolderPath);
+
+			UUID uuid = UUID.randomUUID();
+
+			// iE has file path
+			// uploadFileName =
+			// uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
+
+			uploadFileName = uuid.toString() + "_" + uploadFileName;
+
+			log.info("only file name(for IE): " + uploadFileName);
+
+			try {
+				// File saveFile = new File(uploadFolder,uploadFileName);
+				File saveFile = new File(uploadPath, uploadFileName);
+				multipartFile.transferTo(saveFile);
+
+				attachDTO.setUuid(uuid.toString());
+
+				if (checkImageType(saveFile)) {
+					attachDTO.setFileType(true);
+					//썸네ㅣㄹ 생성
+					FileOutputStream thumbnail = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
+
+					Thumbnailator.createThumbnail(multipartFile.getInputStream(), thumbnail, 100, 100);
+					thumbnail.close();
+
+				}
+				list.add(attachDTO);
+
+			} catch (Exception e) {
+				log.error(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+
+	// 다운로드
+	@GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public ResponseEntity<Resource> downloadFile(@RequestHeader("User-Agent") String userAgent, String fileName) {
+		log.info("download File: " + fileName);
+		Resource resource = new FileSystemResource("c:\\upload\\" + fileName);
+
+		if (resource.exists() == false) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-		
-		log.info("resource : "+resource);
-		
+
+		log.info("resource : " + resource);
+
 		String resourceName = resource.getFilename();
-		//remove UUid
-		String resourceOriginalName = resourceName.substring(resourceName.indexOf("_")+1);
-	
-		//다운로드할때 HttpHeader를 이용
+		// remove UUid
+		String resourceOriginalName = resourceName.substring(resourceName.indexOf("_") + 1);
+
+		// 다운로드할때 HttpHeader를 이용
 		HttpHeaders headers = new HttpHeaders();
-		
+
 		try {
 			String downloadName = null;
-			if(userAgent.contains("Trident")) {
+			if (userAgent.contains("Trident")) {
 				log.info("IE");
-				downloadName = URLEncoder.encode(resourceOriginalName,"UTF-8").replaceAll("\\+"," ");
-			}else if(userAgent.contains("Edge")) {
+				downloadName = URLEncoder.encode(resourceOriginalName, "UTF-8").replaceAll("\\+", " ");
+			} else if (userAgent.contains("Edge")) {
 				log.info("Edge");
-				downloadName = URLEncoder.encode(resourceOriginalName,"UTF-8");
-			}
-			else {
+				downloadName = URLEncoder.encode(resourceOriginalName, "UTF-8");
+			} else {
 				log.info("Chrom");
-				downloadName = new String(resourceOriginalName.getBytes("UTF-8"),"ISO-8859-1");
-				
+				downloadName = new String(resourceOriginalName.getBytes("UTF-8"), "ISO-8859-1");
+
 			}
-			headers.add("Content-Disposition","attachment; filename="+downloadName);
-		}catch(UnsupportedEncodingException e) {
+			headers.add("Content-Disposition", "attachment; filename=" + downloadName);
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
-		
-		return new ResponseEntity<Resource>(resource,headers,HttpStatus.OK);
-		
+
+		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+
 	}
-	//파일 삭제
+
+	// 파일 삭제
 	@PostMapping("/deleteFile")
 	@ResponseBody
-	public ResponseEntity<String> deleteFile(String fileName,String type){
-		log.info("deleteFile: "+fileName);
-		
+	public ResponseEntity<String> deleteFile(String fileName, String type) {
+		log.info("deleteFile: " + fileName);
+
 		File file;
-		
+
 		try {
-			file = new File("c:\\upload\\"+URLDecoder.decode(fileName,"UTF-8"));
-			
+			file = new File("c:\\upload\\" + URLDecoder.decode(fileName, "UTF-8"));
+
 			file.delete();
-			
-			if(type.equals("image")) {
-				String largeFileName = file.getAbsolutePath().replace("s_","");
-				
-				log.info("largeFileName: "+largeFileName);
-				
-				file =new File(largeFileName);
-				
-				file.delete(); 
+
+			if (type.equals("image")) {
+				String largeFileName = file.getAbsolutePath().replace("s_", "");
+
+				log.info("largeFileName: " + largeFileName);
+
+				file = new File(largeFileName);
+
+				file.delete();
 			}
-		}catch(UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>("deleted",HttpStatus.OK);
+		return new ResponseEntity<>("deleted", HttpStatus.OK);
 	}
 
 }
