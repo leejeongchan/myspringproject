@@ -63,7 +63,8 @@
         <li><a href="/user/userlist"><i class="fa fa-link"></i> <span>회원목록</span></a></li>
         <li><a href="/user/userrank"><i class="fa fa-link"></i> <span>랭킹(1~3위)</span></a></li>
         <li><a href="/chat/chatview"><i class="fa fa-link"></i> <span>익명채팅방</span></a></li>
-       	
+        <li><a href="/feed/feedlist"><i class="fa fa-link"></i> <span>피드</span></a></li>
+        
       </ul>
       <!-- /.sidebar-menu -->
     </section>

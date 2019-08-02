@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeongchan.mapper.FeedMapper">
+<!-- 전체 글 조회 -->
+<select id="getList" resultMap="FeedVOResultMap">
+	<![CDATA[
+		select * from jeongchan_feed where feed_bno>0
+	]]>
+</select>
+
+<!-- 게시글 테이블에 삽입 -->
+<insert id="insert">
+	insert into jeongchan_feed (feed_bno,feed_content,feed_writer)
+	values (seq_feed.nextval, #{feedContent},#{feedWriter})
+</insert>
+
+<!-- 게시글 번호로 해당 글 조회 -->
+<select id="read" resultMap="FeedVOResultMap">
+	select * from jeongchan_feed where feed_bno=#{feedBno}
+</select>
+
+<!-- 게시글 번호로 그 게시글 삭제 -->
+<delete id="delete">
+	delete jeongchan_feed where feed_bno=#{feedBno}
+</delete>
+
+<!-- 게시글 수정 -->
+<update id="update">
+	update jeongchan_feed
+	set feed_content=#{feedContent},
+	writer=#{feedWriter},
+	updateDate=sysdate
+	where feed_bno=#{feedBno}
+</update>
+
+
+<resultMap type="com.jeongchan.domain.FeedVO" id="FeedVOResultMap">
+		<id property="feedBno" column="feed_bno"/>
+		<result property="feedContent" column="feed_content"/>
+		<result property="feedWriter" column="feed_writer"/>
+		<result property="feedRegdate" column="feed_regdate"/>
+		<result property="feedUpdatedate" column="feed_updatedate"/>
+		<result property="feedLikecnt" column="feed_likecnt"/>
+		<result property="feedReplycnt" column="feed_replycnt"/>
+	</resultMap>
+</mapper>

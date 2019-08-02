@@ -79,6 +79,7 @@
 			<mapping path="/board/remove"/>
 			<mapping path="/user/userlist"/>
 			<mapping path="/shop/cartList"/>
+			<mapping path="/feed/feedlist"/>
 			<beans:ref bean="authInterceptor"/>
 		</interceptor>
 	</interceptors>
