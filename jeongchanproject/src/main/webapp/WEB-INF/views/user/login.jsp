@@ -39,10 +39,9 @@
 
     <div class="social-auth-links text-center">
       <p>- OR -</p>
-      <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using
-        Facebook</a>
-      <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign in using
-        Google+</a>
+      <a href="https://kauth.kakao.com/oauth/authorize?client_id=699e22769b9f3789d4764b8d68226a98&redirect_uri=http://localhost:8080/user/kakaologin&response_type=code">
+            <img src="../../../resources/img/kakaologin.png">
+        </a>
     </div>
     <!-- /.social-auth-links -->
 

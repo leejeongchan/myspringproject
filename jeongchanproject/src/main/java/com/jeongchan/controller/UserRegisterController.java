@@ -1,10 +1,12 @@
 package com.jeongchan.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +51,20 @@ public class UserRegisterController {
 		
 		return "redirect:/user/login";
 	}
+	//카카오 정보 등록
+	@PostMapping(value="/kakaoregister")
+	public void kakaoRegister(UserVO userVO,Model model,HttpServletRequest request,HttpSession session) {
+		
+		String hashedPw = BCrypt.hashpw(userVO.getUserPw(),BCrypt.gensalt());
+		userVO.setUserPw(hashedPw);
+		userService.register(userVO);
+		log.info("getUserEmail: "+userVO.getUserEmail());
+		session.setAttribute("login",userVO);
+//		redirectAttributes.addFlashAttribute("msg","REGISTERED");
+		model.addAttribute("msg","REGISTERED");
+		
+	}
+	
 	
 	@GetMapping("/key_alter")
 	public String key_alterConfirm(@RequestParam("userId") String userId,@RequestParam("userKey") String userKey) {

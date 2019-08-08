@@ -27,15 +27,19 @@ public class RememberMeInterceptor extends HandlerInterceptorAdapter{
 		log.info("preHandle..");
 		//저장된 쿠키를 불러와서
 		Cookie jeongchanCookie = WebUtils.getCookie(request, "jeongchanCookie");
+		log.info("Remeber 1");
 		//쿠키가 존재하면 
 		if(jeongchanCookie!=null) {
 			//세션키가 있는 유저 조회하여 userVO에 담는ㄴ다.
 			UserVO userVO = userService.checkLoginBefore(jeongchanCookie.getValue());
+			log.info("Remember 2");
 			if(userVO !=null) {
 				//세션 키가 keep메서드로 유지가 되고있다면 login객체에 정보를 넣어서 로그인을 유지
+				log.info("Remember 3");
 				httpSession.setAttribute("login", userVO);
 			}
 		}
+		log.info("Remember 4");
 		return true;
 	}
 }

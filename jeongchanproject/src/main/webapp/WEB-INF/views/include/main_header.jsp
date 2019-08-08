@@ -69,9 +69,16 @@
                 <div class="pull-left">
                   <a href="/user/info" class="btn btn-default btn-flat">나의 정보</a>
                 </div>
+                <c:if test="${kakao eq 1}">
+                 <div class="pull-right">
+                  <a href="/user/kakaologout" class="btn btn-default btn-flat">카카오로그아웃</a>
+                </div>
+                </c:if>
+                <c:if test="${kakao ne 1}">
                 <div class="pull-right">
                   <a href="/user/logout" class="btn btn-default btn-flat">로그아웃</a>
                 </div>
+                </c:if>
               </li>
             </ul>
           </li>
